@@ -9,7 +9,7 @@ html{
 }
 body {
     min-height: 100vh;
-    background-image: url('background.jpg');
+    background-image: url('../Images/background.jpg');
     background-position: right;
     background-repeat: no-repeat;
     background-size: cover;
