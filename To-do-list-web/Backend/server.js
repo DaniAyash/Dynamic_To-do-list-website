@@ -32,7 +32,7 @@ app.post("/signup", async (req, res) => {
   };
 
   if (!data.username.trim() || !data.email.trim() || !data.password.trim()) {
-    return res.json({ error: "All fields are required" });
+    res.missingFields("All fields are required");
   }
 
   try {
