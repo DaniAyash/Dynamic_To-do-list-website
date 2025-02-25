@@ -1,25 +1,49 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const authRoutes = require("./authRoutes"); 
+const path = require("path");
+const collection = require("./config");
 
 const app = express();
 
 // Middleware
-app.use(express.json()); // Parses incoming JSON data
-app.use(cors()); // Handles cross-origin requests
+app.use(express.json());
+app.use(cors());
+app.use(express.urlencoded({ extended: false }));
 
-// Connect to MongoDB
-mongoose
-  .connect("mongodb+srv://020696:020696@cluster0.i3kuv.mongodb.net/todoDB", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => console.log("MongoDB connected"))
-  .catch((err) => console.error("MongoDB connection error:", err));
+// Serve static files (CSS, JS, images) from the Frontend folder
+app.use(express.static(path.join(__dirname, "../Frontend")));
 
-app.use("/auth", authRoutes);
+// Route to serve the login page as the default page
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "../Frontend/pages/login.html"));
+});
 
-// Start Server
-const PORT = 5000;
+// Route to serve the signup page
+app.get("/signup", (req, res) => {
+  res.sendFile(path.join(__dirname, "../Frontend/pages/signup.html"));
+});
+
+app.post("/signup", async (req, res) => {
+  const data = {
+      username: req.body.firstname,
+      email: req.body.email,
+      password: req.body.password,
+  };
+
+  if (!data.username.trim() || !data.email.trim() || !data.password.trim()) {
+    return res.json({ error: "All fields are required" });
+  }
+
+  try {
+    await collection.insertMany([data]); // Insert user data
+    res.redirect("/"); // Redirect to the login page
+  } catch (error) {
+    console.error(error);
+    res.json({ error: "An error occurred. Please try again." });
+  }
+});
+
+// Start the server
+const PORT = 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
