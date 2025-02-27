@@ -1,10 +1,12 @@
 # Dynamic_To-do-list-website
-small to-do list website project to manage tasks dynamically for every different user
+Small to-do list website project to manage tasks dynamically for every different user
+## Technologies used / Tech stack
 
-using html,css and vanilla js for Frontend.
+Html,css and vanilla js for Frontend.
 
-using Node.js with Express.js and mongdoDB for Backend.
+Node.js with Express.js and mongoDB for Backend.
 
-using client server architecture.
+used client server architecture.
+### Work in progress...
 
 
