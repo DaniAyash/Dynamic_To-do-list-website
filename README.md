@@ -6,6 +6,6 @@ Html,css and vanilla js for Frontend.
 
 Node.js with Express.js and mongdoDB for Backend.
 
-using client server architecture.
+used client server architecture.
 
 
