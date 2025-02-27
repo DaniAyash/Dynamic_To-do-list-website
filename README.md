@@ -4,8 +4,9 @@ Small to-do list website project to manage tasks dynamically for every different
 
 Html,css and vanilla js for Frontend.
 
-Node.js with Express.js and mongdoDB for Backend.
+Node.js with Express.js and mongoDB for Backend.
 
 used client server architecture.
+### Work in progress
 
 
