@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const path = require("path");
+const cookieParser = require("cookie-parser");
 const collection = require("./config");
 
 const app = express();
@@ -10,6 +11,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser()); // Enable cookie parsing
 
 // Serve static files (CSS, JS, images) from the Frontend folder
 app.use(express.static(path.join(__dirname, "../Frontend")));
@@ -22,6 +24,10 @@ app.get("/", (req, res) => {
 // Route to serve the signup page
 app.get("/signup", (req, res) => {
   res.sendFile(path.join(__dirname, "../Frontend/pages/signup.html"));
+});
+
+app.get("/todo", (req, res) => {
+  res.sendFile(path.join(__dirname, "../Frontend/pages/todo.html"));
 });
 
 app.post("/signup", async (req, res) => {
@@ -41,6 +47,35 @@ app.post("/signup", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.json({ error: "An error occurred. Please try again." });
+  }
+});
+
+app.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.json({ error: "All fields are required" });
+  }
+
+  try {
+    // Find user in MongoDB
+    const user = await collection.findOne({ email });
+
+    if (!user) {
+      return res.json({ error: "User not found" });
+    }
+
+    // Check if password matches
+    if (user.password !== password) {
+      return res.json({ error: "Invalid credentials" });
+    }
+
+    res.cookie("username", user.username, { httpOnly: false }); // httpOnly: false allows JS access
+    res.redirect("/todo"); // If login is successful, redirect to /todo
+
+  } catch (error) {
+    console.error(error);
+    res.json({ error: "Something went wrong. Try again." });
   }
 });
 

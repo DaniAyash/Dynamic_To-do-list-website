@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <link rel="stylesheet" href="../Styles/todostyle.css">
+</head>
+<body>
+    <div class="navbar">
+        <h2 id="todo-header">To-Do tasks</h2>
+        <button onclick="logout()">Logout</button>
+    </div>
+    <div class="container">
+        <div id="task-list"></div>
+        <div class="add-task">
+            <input type="text" id="task-input" placeholder="New task...">
+            <button onclick="addTask()">Add</button>
+        </div>
+    </div>
+
+    <!-- <script>
+        function addTask() {
+            const taskInput = document.getElementById("task-input");
+            const taskList = document.getElementById("task-list");
+            if (taskInput.value.trim() === "") return;
+            
+            const taskDiv = document.createElement("div");
+            taskDiv.classList.add("task");
+            taskDiv.innerHTML = `<span>${taskInput.value}</span> <button onclick="removeTask(this)">Remove</button>`;
+            
+            taskList.appendChild(taskDiv);
+            taskInput.value = "";
+        }
+        
+        function removeTask(button) {
+            button.parentElement.remove();
+        }
+        
+        function logout() {
+            alert("Logged out successfully!");
+            window.location.href = "login.html"; // Redirect to login page
+        }
+    </script> -->
+    <script src="../scripts/todo.js"></script>
+</body>
+</html>
