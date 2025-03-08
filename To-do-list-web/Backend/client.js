@@ -7,28 +7,28 @@ const errormessage = document.getElementById("error-message");
 
 form.addEventListener("submit", async (event) => {
     event.preventDefault(); // Prevent default form submission
-    // let errors = [];
+    let errors = [];
 
-    // if (firstname.value.trim() === "") {
-    //     errors.push("Firstname is required");
-    // }
-    // if (email.value.trim() === "") {
-    //     errors.push("Email is required");
-    // }
-    // if (password.value.trim() === "") {
-    //     errors.push("Password is required");
-    // }
-    // if (repeatpass.value.trim() === "") {
-    //     errors.push("Repeat password is required");
-    // }
-    // if (password.value !== repeatpass.value) {
-    //     errors.push("Passwords do not match");
-    // }
+    if (firstname.value.trim() === "") {
+        errors.push("Firstname is required");
+    }
+    if (email.value.trim() === "") {
+        errors.push("Email is required");
+    }
+    if (password.value.trim() === "") {
+        errors.push("Password is required");
+    }
+    if (repeatpass.value.trim() === "") {
+        errors.push("Repeat password is required");
+    }
+    if (password.value !== repeatpass.value) {
+        errors.push("Passwords do not match");
+    }
 
-    // if (errors.length > 0) {
-    //     errormessage.innerText = errors.join(". ");
-    //     return; // Stop submission if there are errors
-    // }
+    if (errors.length > 0) {
+        errormessage.innerText = errors.join(". ");
+        return; // Stop submission if there are errors
+    }
 
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
