@@ -9,6 +9,7 @@ const UserSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   email: { type: String, required: true},
   password: { type: String, required: true },
+  tasks: { type: Array, default: [] }, // Store tasks as an array
 });
 
 const collection = mongoose.model("users", UserSchema);

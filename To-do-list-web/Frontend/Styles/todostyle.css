@@ -10,13 +10,13 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 5px;
-    background-color: #333;
+    background-color: #703c9a;
     color: white;
 }
 
 .navbar button {
-    background: red;
-    color: white;
+    background: rgb(229, 227, 230);
+    color: rgb(129, 80, 174);
     border: none;
     padding: 8px 15px;
     cursor: pointer;
@@ -38,7 +38,7 @@ ul {
 }
 
 li {
-    display: flex;
+    display:inline-flex;
     justify-content: space-between;
     background: #ddd;
     padding: 10px;
@@ -47,7 +47,7 @@ li {
 }
 
 button {
-    background: blue;
+    background: rgb(109, 59, 175);
     color: white;
     border: none;
     padding: 5px 10px;

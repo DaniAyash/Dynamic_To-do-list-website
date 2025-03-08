@@ -35,6 +35,7 @@ app.post("/signup", async (req, res) => {
       username: req.body.firstname,
       email: req.body.email,
       password: req.body.password,
+      tasks: [],
   };
 
   if (!data.username.trim() || !data.email.trim() || !data.password.trim()) {
@@ -78,6 +79,22 @@ app.post("/login", async (req, res) => {
     res.json({ error: "Something went wrong. Try again." });
   }
 });
+
+app.get("/todo", async (req, res) => {
+  const username = req.cookies.username; // Get username from cookie
+  if (!username) return res.json({ error: "Not authenticated" });
+
+  try {
+    const user = await collection.findOne({ username });
+    if (!user) return res.json({ error: "User not found" });
+
+    res.json(user.tasks); // Send the tasks array
+  } catch (error) {
+    console.error(error);
+    res.json({ error: "Something went wrong" });
+  }
+});
+
 
 // Start the server
 const PORT = 3000;
