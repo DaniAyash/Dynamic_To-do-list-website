@@ -71,6 +71,7 @@ app.post("/login", async (req, res) => {
       return res.json({ error: "Invalid credentials" });
     }
 
+    console.log(user.email);
     res.cookie("username", user.username, { httpOnly: false }); // httpOnly: false allows JS access
     res.redirect("/todo"); // If login is successful, redirect to /todo
 
@@ -80,21 +81,33 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.post("/todo", async (req, res) => {
-  const username = req.cookies.username; // Get username from cookie
-  if (!username) return res.json({ error: "Not authenticated" });
+app.post("/todo", async (req, res) => { 
+  console.log("Received request at /todo"); // Debug
+
+  const username = req.cookies?.username; // Get username from cookie
+  console.log("Username from cookies:", username); // Debug
+
+  if (!username) {
+      console.log("User not authenticated");
+      return res.json({ error: "Not authenticated" });
+  }
 
   try {
       const user = await collection.findOne({ username });
-      if (!user) return res.json({ error: "User not found" });
+      console.log("DB Query Result:", user); // Debug
 
-      res.json({ tasks: user.tasks }); // Send tasks as an object
+      if (!user) {
+          console.log("User not found");
+          return res.json({ error: "User not found" });
+      }
+
+      console.log("User tasks:", user.tasks); // Debug
+      res.json({ tasks: user.tasks }); // Send tasks
   } catch (error) {
-      console.error(error);
+      console.error("Database error:", error);
       res.json({ error: "Something went wrong" });
   }
 });
-
 
 // Start the server
 const PORT = 3000;

@@ -82,30 +82,35 @@ async function loadTasks() {
     try {
         const response = await fetch("/todo", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
             credentials: "include", // Ensures cookies are sent
+            headers: { "Content-Type": "application/json" }
         });
 
-        const result = await response.json();
-        const taskList = document.getElementById("task-list");
+        const data = await response.json();
+        console.log("Received tasks:", data); // Debugging
 
-        if (result.error) {
-            taskList.innerHTML = `<p class="error">${result.error}</p>`;
+        if (data.error) {
+            console.error("Error:", data.error);
             return;
         }
 
-        taskList.innerHTML = ""; // Clear existing tasks
-        result.tasks.forEach(task => {
-            const taskDiv = document.createElement("div");
-            taskDiv.classList.add("task");
-            taskDiv.innerHTML = `<span>${task}</span>`;
-            taskList.appendChild(taskDiv);
-        });
-
+        displayTasks(data.tasks);
     } catch (error) {
-        console.error("Error fetching tasks:", error);
-        document.getElementById("task-list").innerHTML = `<p class="error">Failed to load tasks</p>`;
+        console.error("Request failed:", error);
     }
 }
 
-document.addEventListener("DOMContentLoaded", loadTasks); // Run when page loads
+function displayTasks(tasks) {
+    const taskList = document.getElementById("task-list");
+    taskList.innerHTML = ""; // Clear previous tasks
+
+    tasks.forEach(task => {
+        const taskDiv = document.createElement("div");
+        taskDiv.classList.add("task");
+        taskDiv.innerHTML = `<span>${task}</span> <button onclick="removeTask(this)">Remove</button>`;
+        taskList.appendChild(taskDiv);
+    });
+}
+
+// Ensure the function runs when the page loads
+window.onload = loadTasks;
