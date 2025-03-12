@@ -80,18 +80,18 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.get("/todo", async (req, res) => {
+app.post("/todo", async (req, res) => {
   const username = req.cookies.username; // Get username from cookie
   if (!username) return res.json({ error: "Not authenticated" });
 
   try {
-    const user = await collection.findOne({ username });
-    if (!user) return res.json({ error: "User not found" });
+      const user = await collection.findOne({ username });
+      if (!user) return res.json({ error: "User not found" });
 
-    res.json(user.tasks); // Send the tasks array
+      res.json({ tasks: user.tasks }); // Send tasks as an object
   } catch (error) {
-    console.error(error);
-    res.json({ error: "Something went wrong" });
+      console.error(error);
+      res.json({ error: "Something went wrong" });
   }
 });
 

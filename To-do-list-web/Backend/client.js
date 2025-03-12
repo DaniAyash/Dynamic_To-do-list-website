@@ -77,3 +77,35 @@ form.addEventListener("submit", async (event) => {
         errormessage.innerText = "An error occurred. Please try again.";
     }
 });
+
+async function loadTasks() {
+    try {
+        const response = await fetch("/todo", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include", // Ensures cookies are sent
+        });
+
+        const result = await response.json();
+        const taskList = document.getElementById("task-list");
+
+        if (result.error) {
+            taskList.innerHTML = `<p class="error">${result.error}</p>`;
+            return;
+        }
+
+        taskList.innerHTML = ""; // Clear existing tasks
+        result.tasks.forEach(task => {
+            const taskDiv = document.createElement("div");
+            taskDiv.classList.add("task");
+            taskDiv.innerHTML = `<span>${task}</span>`;
+            taskList.appendChild(taskDiv);
+        });
+
+    } catch (error) {
+        console.error("Error fetching tasks:", error);
+        document.getElementById("task-list").innerHTML = `<p class="error">Failed to load tasks</p>`;
+    }
+}
+
+document.addEventListener("DOMContentLoaded", loadTasks); // Run when page loads
