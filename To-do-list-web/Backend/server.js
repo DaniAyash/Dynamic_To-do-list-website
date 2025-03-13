@@ -109,6 +109,39 @@ app.post("/todo", async (req, res) => {
   }
 });
 
+app.post("/add-task", async (req, res) => {
+  const username = req.cookies?.username; // Get the username from cookies
+  const { task } = req.body; // Get task from request body
+
+  console.log("Adding task for user:", username, "Task:", task); // Debug log
+
+  if (!username) {
+      return res.json({ error: "Not authenticated" });
+  }
+
+  if (!task || !task.trim()) {
+      return res.json({ error: "Task cannot be empty" });
+  }
+
+  try {
+      // Find user and update their tasks array
+      const user = await collection.findOneAndUpdate(
+          { username }, // Find user by username
+          { $push: { tasks: task } }, // Push new task into tasks array
+          { new: true } // Return updated document
+      );
+
+      if (!user) {
+          return res.json({ error: "User not found" });
+      }
+
+      res.json({ success: true, tasks: user.tasks }); // Send updated tasks list
+  } catch (error) {
+      console.error("Database error:", error);
+      res.json({ error: "Failed to add task" });
+  }
+});
+
 // Start the server
 const PORT = 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

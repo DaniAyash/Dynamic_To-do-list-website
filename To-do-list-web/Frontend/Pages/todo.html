@@ -9,7 +9,7 @@
 <body>
     <div class="navbar">
         <h2 id="todo-header">To-Do tasks</h2>
-        <button onclick="logout()">Logout</button>
+        <button id="logout-btn">Logout</button>
     </div>
     <div class="container">
         <div id="task-list"></div>
@@ -18,88 +18,6 @@
             <button onclick="addTask()">Add</button>
         </div>
     </div>
-
-    <!-- <script>
-        function addTask() {
-            const taskInput = document.getElementById("task-input");
-            const taskList = document.getElementById("task-list");
-            if (taskInput.value.trim() === "") return;
-            
-            const taskDiv = document.createElement("div");
-            taskDiv.classList.add("task");
-            taskDiv.innerHTML = `<span>${taskInput.value}</span> <button onclick="removeTask(this)">Remove</button>`;
-            
-            taskList.appendChild(taskDiv);
-            taskInput.value = "";
-        }
-        
-        function removeTask(button) {
-            button.parentElement.remove();
-        }
-        
-        function logout() {
-            alert("Logged out successfully!");
-            window.location.href = "login.html"; // Redirect to login page
-        }
-    </script> -->
-    <script>
-        async function loadTasks() {
-            try {
-                const response = await fetch("/todo", {
-                    method: "POST",
-                    credentials: "include",
-                    headers: { "Content-Type": "application/json" }
-                });
-    
-                const data = await response.json();
-                console.log("Received tasks:", data); // Debugging
-    
-                if (data.error) {
-                    console.error("Error:", data.error);
-                    return;
-                }
-    
-                displayTasks(data.tasks);
-            } catch (error) {
-                console.error("Request failed:", error);
-            }
-        }
-    
-        function displayTasks(tasks) {
-            const taskList = document.getElementById("task-list");
-            taskList.innerHTML = ""; // Clear previous tasks
-    
-            tasks.forEach(task => {
-                const taskDiv = document.createElement("div");
-                taskDiv.classList.add("task");
-                taskDiv.innerHTML = `<span>${task}</span> <button onclick="removeTask(this)">Remove</button>`;
-                taskList.appendChild(taskDiv);
-            });
-        }
-
-        function getCookie(name) {
-            const cookies = document.cookie.split("; ");
-            for (let cookie of cookies) {
-                const [key, value] = cookie.split("=");
-                if (key === name) {
-                    return value;
-                }
-            }
-            return null;
-        }
-
-        // Get the username from the cookie
-        const username = getCookie("username");
-
-        // Display the username in the to-do page
-        if (username) {
-            document.getElementById("todo-header").innerText = `This is ${username}'s to-do list`;
-        } else {
-            document.getElementById("todo-header").innerText = "To-Do List";
-        }
-
-    
-        window.onload = loadTasks;
-    </script>        
+    <script src="../scripts/todo.js"></script>  
 </body>
 </html>
