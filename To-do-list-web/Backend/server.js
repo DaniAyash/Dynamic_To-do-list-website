@@ -32,9 +32,9 @@ app.get("/todo", (req, res) => {
 
 app.post("/signup", async (req, res) => {
   const data = {
-      username: req.body.firstname,
-      email: req.body.email,
-      password: req.body.password,
+      username: req.formData.firstname,
+      email: req.formData.email,
+      password: req.formData.password,
       tasks: [],
   };
 
