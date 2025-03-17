@@ -59,27 +59,25 @@ app.post("/login", async (req, res) => {
   }
 
   try {
-    // Find user in MongoDB
     const user = await collection.findOne({ email });
 
     if (!user) {
       return res.json({ error: "User not found" });
     }
 
-    // Check if password matches
     if (user.password !== password) {
       return res.json({ error: "Invalid credentials" });
     }
 
     console.log(user.email);
-    res.cookie("username", user.username, { httpOnly: false }); // httpOnly: false allows JS access
-    res.redirect("/todo"); // If login is successful, redirect to /todo
-
+    res.cookie("username", user.username, { httpOnly: false }); // Allow JS access
+    res.json({ redirect: "/todo" }); // Fix: return redirect in JSON instead of res.redirect()
   } catch (error) {
     console.error(error);
     res.json({ error: "Something went wrong. Try again." });
   }
 });
+
 
 app.post("/todo", async (req, res) => { 
   console.log("Received request at /todo"); // Debug
