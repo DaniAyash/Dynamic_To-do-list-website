@@ -148,6 +148,33 @@ app.post("/add-task", async (req, res) => {
   }
 });
 
+app.post("/remove-task", async (req, res) => {
+  const { taskIndex } = req.body; // Get index from request
+  const username = req.cookies.username; // Assuming the username is stored in cookies
+
+  try {
+      // Step 1: Unset the specific index (set it to `null`)
+      await collection.updateOne(
+          { username },
+          { $unset: { [`tasks.${taskIndex}`]: 1 } }
+      );
+
+      // Step 2: Remove `null` values from the array
+      await collection.updateOne(
+          { username },
+          { $pull: { tasks: null } }
+      );
+
+      // Fetch updated tasks
+      const user = await collection.findOne({ username });
+
+      res.json({ success: true, tasks: user.tasks }); // Send updated task list
+  } catch (error) {
+      console.error("Error removing task:", error);
+      res.json({ error: "An error occurred. Please try again." });
+  }
+});
+
 // Start the server
 const PORT = 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

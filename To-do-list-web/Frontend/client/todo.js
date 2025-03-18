@@ -49,14 +49,34 @@ async function addTask() {
     }
 }
 
+async function removeTask(taskIndex) {
+    try {
+        const response = await fetch("/remove-task", {
+            method: "POST", // Could also use DELETE
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ taskIndex })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            displayTasks(result.tasks); // Refresh the UI with updated task list
+        } else {
+            alert(result.error || "Failed to remove task");
+        }
+    } catch (error) {
+        console.error("Error removing task:", error);
+    }
+}
+
 function displayTasks(tasks) {
     const taskList = document.getElementById("task-list");
     taskList.innerHTML = ""; // Clear previous tasks
 
-    tasks.forEach(task => {
+    tasks.forEach((task, index) => {
         const taskDiv = document.createElement("div");
         taskDiv.classList.add("task");
-        taskDiv.innerHTML = `<span>${task}</span> <button onclick="removeTask(this)">Remove</button>`;
+        taskDiv.innerHTML = `<span>${task}</span> <button onclick="removeTask(${index})">Remove</button>`;
         taskList.appendChild(taskDiv);
     });
 }
