@@ -77,25 +77,43 @@ function displayTasks(tasks) {
         const taskDiv = document.createElement("div");
         taskDiv.classList.add("task");
         taskDiv.innerHTML = `
-        <span id="task-text-${index}">${task}</span> 
-        <input type="checkbox" id="task-${index}" onclick="toggleTask(this, ${index})">
+        <span id="task-text-${index}" style="text-decoration: ${task.completed ? 'line-through' : 'none'}; color: ${task.completed ? 'purple' : 'black'}">
+            ${task.taskText}
+        </span> 
+        <input type="checkbox" id="task-${index}" onclick="toggleTask(this, ${index})" ${task.completed ? 'checked' : ''}>
         <button onclick="removeTask(${index})">Remove</button>`;
         taskList.appendChild(taskDiv);
     });
 }
 
-function toggleTask(checkbox, taskIndex) {
-    const taskText = document.getElementById(`task-text-${taskIndex}`);
 
-    if (checkbox.checked) {
-        taskText.style.textDecoration = "line-through";
-        taskText.style.color = "purple";
-    }
-    else {
-        taskText.style.textDecoration = "none";
-        taskText.style.color = "black";
-    }
+function toggleTask(checkbox, taskIndex) {
+    const completed = checkbox.checked;
+
+    // Send the completed status to the server for the specific task
+    fetch("/update-task", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ taskIndex, completed })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const taskText = document.getElementById(`task-text-${taskIndex}`);
+            if (completed) {
+                taskText.style.textDecoration = "line-through";
+                taskText.style.color = "purple";
+            } else {
+                taskText.style.textDecoration = "none";
+                taskText.style.color = "black";
+            }
+        } else {
+            console.error("Failed to update task status");
+        }
+    })
+    .catch(error => console.error("Error updating task:", error));
 }
+
 
 
 function getCookie(name) {
@@ -103,7 +121,7 @@ function getCookie(name) {
     for (let cookie of cookies) {
         const [key, value] = cookie.split("=");
         if (key === name) {
-            return value;
+            return decodeURIComponent(value); // Decode the cookie value here
         }
     }
     return null;

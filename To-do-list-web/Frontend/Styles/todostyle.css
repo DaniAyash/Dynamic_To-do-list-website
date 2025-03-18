@@ -9,7 +9,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 5px;
+    padding: 10px 20px;
     background-color: #703c9a;
     color: white;
 }
@@ -24,12 +24,44 @@ body {
 }
 
 .container {
-    max-width: 500px;
+    max-width: 600px;
     margin: 30px auto;
     background: white;
-    padding: 20px;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.add-task {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.add-task input {
+    width: 80%;
+    padding: 10px;
+    border: 2px solid #ddd;
     border-radius: 8px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    font-size: 16px;
+}
+
+.add-task button {
+    background: #703c9a;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+.add-task button:hover {
+    background: #5a2f7d;
+}
+
+#task-list {
+    margin-top: 20px;
 }
 
 ul {
@@ -38,19 +70,84 @@ ul {
 }
 
 li {
-    display:inline-flex;
+    display: flex;
     justify-content: space-between;
-    background: #ddd;
-    padding: 10px;
-    margin: 5px 0;
-    border-radius: 5px;
+    align-items: center;
+    background: #fafafa;
+    padding: 12px 15px;
+    margin: 8px 0;
+    border-radius: 8px;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
 }
 
-button {
+li:hover {
+    transform: scale(1.02);
+    background: #f4f4f4;
+}
+
+li button {
     background: rgb(109, 59, 175);
     color: white;
     border: none;
     padding: 5px 10px;
     cursor: pointer;
     border-radius: 5px;
+}
+
+li button:hover {
+    background: rgb(87, 47, 141);
+}
+
+h2 {
+    font-size: 32px;
+    margin: 0;
+}
+
+p {
+    color: #333;
+    font-size: 14px;
+}
+
+/* New CSS for dynamically added task elements */
+.task {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f9f9f9;
+    padding: 12px 15px;
+    margin: 10px 0;
+    border-radius: 8px;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+}
+
+.task:hover {
+    background-color: #ececec;
+}
+
+.task span {
+    font-size: 16px;
+    flex: 1;
+    padding-right: 10px;
+    transition: text-decoration 0.3s ease, color 0.3s ease;
+}
+
+.task input[type="checkbox"] {
+    margin-right: 10px;
+    transform: scale(1.2);
+}
+
+.task button {
+    background-color: #703c9a;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.task button:hover {
+    background-color: #531065;
 }

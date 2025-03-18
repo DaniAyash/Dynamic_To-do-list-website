@@ -115,38 +115,29 @@ app.post("/todo", async (req, res) => {
   }
 });
 
+// Example: Adding a new task
 app.post("/add-task", async (req, res) => {
-  const username = req.cookies?.username; // Get the username from cookies
-  const { task } = req.body; // Get task from request body
+  const { task } = req.body; // Get task text from request body
+  const username = req.cookies?.username;
 
-  console.log("Adding task for user:", username, "Task:", task); // Debug log
-
-  if (!username) {
-      return res.json({ error: "Not authenticated" });
-  }
-
-  if (!task || !task.trim()) {
-      return res.json({ error: "Task cannot be empty" });
+  if (!username || !task || !task.trim()) {
+    return res.json({ error: "Not authenticated or task is empty" });
   }
 
   try {
-      // Find user and update their tasks array
-      const user = await collection.findOneAndUpdate(
-          { username }, // Find user by username
-          { $push: { tasks: task } }, // Push new task into tasks array
-          { new: true } // Return updated document
-      );
+    const user = await collection.findOneAndUpdate(
+      { username },
+      { $push: { tasks: { taskText: task, completed: false } } }, // Add task with completed as false
+      { new: true }
+    );
 
-      if (!user) {
-          return res.json({ error: "User not found" });
-      }
-
-      res.json({ success: true, tasks: user.tasks }); // Send updated tasks list
+    res.json({ success: true, tasks: user.tasks });
   } catch (error) {
-      console.error("Database error:", error);
-      res.json({ error: "Failed to add task" });
+    console.error(error);
+    res.json({ error: "Failed to add task" });
   }
 });
+
 
 app.post("/remove-task", async (req, res) => {
   const { taskIndex } = req.body; // Get index from request
@@ -174,6 +165,30 @@ app.post("/remove-task", async (req, res) => {
       res.json({ error: "An error occurred. Please try again." });
   }
 });
+
+app.post("/update-task", async (req, res) => {
+  const { taskIndex, completed } = req.body; // Get task index and completed status
+  const username = req.cookies?.username;
+
+  if (!username || taskIndex == undefined) {
+    return res.json({ error: "Not authenticated or invalid task index" });
+  }
+
+  try {
+    // Update the completed status of the task at the given index
+    const user = await collection.findOneAndUpdate(
+      { username },
+      { $set: { [`tasks.${taskIndex}.completed`]: completed } },
+      { new: true }
+    );
+
+    res.json({ success: true, tasks: user.tasks });
+  } catch (error) {
+    console.error(error);
+    res.json({ error: "Failed to update task" });
+  }
+});
+
 
 // Start the server
 const PORT = 3000;
