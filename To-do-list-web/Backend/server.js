@@ -31,20 +31,28 @@ app.get("/todo", (req, res) => {
 });
 
 app.post("/signup", async (req, res) => {
-  const data = {
-      username: req.formData.firstname,
-      email: req.formData.email,
-      password: req.formData.password,
-      tasks: [],
-  };
+  const { username, email, password } = req.body;
 
-  if (!data.username.trim() || !data.email.trim() || !data.password.trim()) {
-    return res.json({ missingFields: "All fields are required" });
+  if (!username.trim() || !email.trim() || !password.trim()) {
+    return res.json({ error: "All fields are required" });
   }
 
   try {
-    await collection.insertMany([data]); // Insert user data
-    res.redirect("/"); // Redirect to the login page
+    // Check if the username already exists
+    const existingUser = await collection.findOne({ username });
+    if (existingUser) {
+      return res.json({ error: "Username already exists. Choose another one." });
+    }
+
+    // Insert the new user
+    await collection.insertOne({
+      username,
+      email,
+      password,
+      tasks: [],
+    });
+
+    res.json({ redirect: "/" }); // Send response to frontend for redirection
   } catch (error) {
     console.error(error);
     res.json({ error: "An error occurred. Please try again." });
