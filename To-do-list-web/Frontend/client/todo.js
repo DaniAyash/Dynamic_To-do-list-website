@@ -76,10 +76,27 @@ function displayTasks(tasks) {
     tasks.forEach((task, index) => {
         const taskDiv = document.createElement("div");
         taskDiv.classList.add("task");
-        taskDiv.innerHTML = `<span>${task}</span> <button onclick="removeTask(${index})">Remove</button>`;
+        taskDiv.innerHTML = `
+        <span id="task-text-${index}">${task}</span> 
+        <input type="checkbox" id="task-${index}" onclick="toggleTask(this, ${index})">
+        <button onclick="removeTask(${index})">Remove</button>`;
         taskList.appendChild(taskDiv);
     });
 }
+
+function toggleTask(checkbox, taskIndex) {
+    const taskText = document.getElementById(`task-text-${taskIndex}`);
+
+    if (checkbox.checked) {
+        taskText.style.textDecoration = "line-through";
+        taskText.style.color = "purple";
+    }
+    else {
+        taskText.style.textDecoration = "none";
+        taskText.style.color = "black";
+    }
+}
+
 
 function getCookie(name) {
     const cookies = document.cookie.split("; ");
