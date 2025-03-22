@@ -49,6 +49,7 @@ app.post("/signup", async (req, res) => {
       username,
       email,
       password,
+      connected: false,
       tasks: [],
     });
 
@@ -76,8 +77,18 @@ app.post("/login", async (req, res) => {
     if (user.password !== password) {
       return res.json({ error: "Invalid credentials" });
     }
+    if (user.connected){
+      return res.json({ conn: "User already connected" });
+    }
+
+    // Update the connected field to true
+    await collection.updateOne(
+      { email },
+      { $set: { connected: true } }
+    );
 
     console.log(user.email);
+
     res.cookie("username", user.username, { httpOnly: false }); // Allow JS access
     res.json({ redirect: "/todo" }); // Fix: return redirect in JSON instead of res.redirect()
   } catch (error) {
@@ -86,6 +97,32 @@ app.post("/login", async (req, res) => {
   }
 });
 
+app.post("/logout", async (req, res) => {
+  const username = req.cookies?.username;
+
+  if (!username) {
+    return res.json({ error: "Not authenticated" });
+  }
+
+  try {
+    const user = await collection.findOneAndUpdate(
+      { username },
+      { $set: { connected: false } }
+    );  
+    if (!user) {
+      return res.json({ error: "User not found" });
+    }
+  } catch (error) { 
+    console.error(error);
+    return res.json({ error: "Something went wrong" });
+  }
+
+  // Clear the username cookie
+  res.clearCookie("username"); 
+
+  // Send a success response
+  res.json({ success: true, message: "Logged out successfully" });
+});
 
 app.post("/todo", async (req, res) => { 
   console.log("Received request at /todo"); // Debug
@@ -178,7 +215,7 @@ app.post("/update-task", async (req, res) => {
     // Update the completed status of the task at the given index
     const user = await collection.findOneAndUpdate(
       { username },
-      { $set: { [`tasks.${taskIndex}.completed`]: completed } },
+      { $set: { [`tasks.${taskIndex}.completed`]: completed } }, // goes to tasks gets the task with index passed from the loop of each task and within it gets the completed field
       { new: true }
     );
 

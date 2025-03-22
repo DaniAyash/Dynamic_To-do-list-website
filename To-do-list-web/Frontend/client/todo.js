@@ -115,7 +115,6 @@ function toggleTask(checkbox, taskIndex) {
 }
 
 
-
 function getCookie(name) {
     const cookies = document.cookie.split("; ");
     for (let cookie of cookies) {
@@ -127,18 +126,47 @@ function getCookie(name) {
     return null;
 }
 
-function logout() {
-    // Set a flag in localStorage to indicate logout
-    localStorage.setItem("clearLoginFields", "true");
-
-    // Redirect to the login page
-    window.location.href = "/";
-}
 
 document.addEventListener("DOMContentLoaded", function () {
-    document.getElementById("logout-btn").addEventListener("click", logout);
+    const logoutButton = document.getElementById("logout-btn");
+
+    if (!logoutButton) {
+        console.error("Logout button not found!");
+        return;
+    }
+
+    logoutButton.addEventListener("click", logout);
 });
 
+async function logout() {
+    console.log("Logout function started...");
+
+    try {
+        const response = await fetch("/logout", {
+            method: "POST",
+            credentials: "include", // Include cookies in the request
+            headers: { "Content-Type": "application/json" }
+        });
+
+        console.log("Logout response received:", response);
+
+        const data = await response.json();
+        console.log("Logout data received:", data);
+
+        if (data.error) {
+            console.error("Logout error:", data.error);
+            alert(data.error);
+            return;
+        }
+        if (data.success) {
+            alert("Logged out successfully!");
+            window.location.href = "/";
+        }
+    } catch (error) {
+        console.error("Error during logout:", error);
+        alert("An error occurred. Please try again.");
+    }
+}
 
 // Get the username from the cookie
 const username = getCookie("username");

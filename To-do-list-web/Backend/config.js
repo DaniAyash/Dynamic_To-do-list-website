@@ -9,6 +9,7 @@ const UserSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   email: { type: String, required: true},
   password: { type: String, required: true },
+  connected: { type: Boolean, default: false },
   tasks: [{
     taskText: { type: String, required: true },  // The task description
     completed: { type: Boolean, default: false }  // Completion status (default is false)

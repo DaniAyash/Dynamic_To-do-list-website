@@ -30,9 +30,12 @@ form.addEventListener("submit", async (event) => {
 
         if (result.error) {
             errormessage.innerText = result.error; // Show error message
+        } else if (result.conn) {
+            errormessage.innerText = result.conn; // Show error message
         } else if (result.redirect) {
             window.location.href = result.redirect; // Redirect user to /todo
         }
+        
     } catch (error) {
         console.error("Error:", error);
         errormessage.innerText = "An error occurred. Please try again.";
