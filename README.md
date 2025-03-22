@@ -8,6 +8,4 @@ Node.js with Express.js and mongoDB for Backend.
 
 used client server architecture.
 
-k
-
 ####  Ⓒ Made by Daniel Ayash
