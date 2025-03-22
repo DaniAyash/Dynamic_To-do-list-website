@@ -124,6 +124,30 @@ app.post("/logout", async (req, res) => {
   res.json({ success: true, message: "Logged out successfully" });
 });
 
+app.post("/manualLogout", async (req, res) => {
+  const email = req.body.email;
+
+  if (!email) {
+      return res.json({ error: "Email is required" });
+  }
+
+  try {
+      const user = await collection.findOneAndUpdate(
+          { email }, // Find user by email
+          { $set: { connected: false } } // Set connected to false
+      );
+
+      if (!user) {
+          return res.json({ error: "User not found" });
+      }
+
+      res.json({ success: true, message: "Logged out manually" });
+  } catch (error) {
+      console.error(error);
+      res.json({ error: "Something went wrong" });
+  }
+});
+
 app.post("/todo", async (req, res) => { 
   console.log("Received request at /todo"); // Debug
 

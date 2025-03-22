@@ -31,7 +31,10 @@ form.addEventListener("submit", async (event) => {
         if (result.error) {
             errormessage.innerText = result.error; // Show error message
         } else if (result.conn) {
-            errormessage.innerText = result.conn; // Show error message
+            errormessage.innerHTML = `
+            <p>${result.conn} <br> 
+            <a href="#" onClick="manualLogout()">Click here to logout manually</a></p>
+            </p>`;
         } else if (result.redirect) {
             window.location.href = result.redirect; // Redirect user to /todo
         }
@@ -41,3 +44,28 @@ form.addEventListener("submit", async (event) => {
         errormessage.innerText = "An error occurred. Please try again.";
     }
 });
+
+async function manualLogout() {
+    const emailInput = document.getElementById("email-input").value.trim();
+
+    if (!emailInput) {
+        alert("Please enter your email.");
+        return;
+    }
+
+    const response = await fetch("/manualLogout", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: emailInput }) // Pass the email
+    });
+
+    const data = await response.json();
+    
+    if (data.error) {
+        alert(data.error);
+    } else if (data.success) {
+        alert(data.message);
+        window.location.reload(); // Reload the page
+    }
+}
